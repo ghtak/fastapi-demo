@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from starlette.responses import RedirectResponse
 
-from app.domain.v1.index.index_router import index_router
+from app.domain.v1.index import router
 
 import logging
 
@@ -12,8 +12,7 @@ logging.getLogger().setLevel(logging.DEBUG)
 
 app = FastAPI()
 
-app.include_router(index_router, prefix='/index')
-
+# app.include_router(app.domain.v1.index.router , prefix='/index')
 
 
 @app.get("/")
