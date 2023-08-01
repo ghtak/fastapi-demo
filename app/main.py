@@ -1,6 +1,8 @@
 import logging
+from functools import partial
 
 from fastapi import FastAPI, Request
+from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import RedirectResponse
 
 from app.api.v1.routes import routes as v1_routes
@@ -10,17 +12,19 @@ from app.core.settings import settings
 from app.internal.logging_middleware import logging_middleware_impl
 from fastapi.middleware.cors import CORSMiddleware
 
+get_session_impl = None
+
 
 class AppInitializer:
     def __init__(self):
-        self.app = FastAPI()
-        self.container = Container()
-        self.container.config.from_dict(settings.dict())
-        Container.instance = self.container
-        self.apply_cors()
         logging.basicConfig()
         logging.getLogger().setLevel(logging.DEBUG)
 
+        self.app = FastAPI()
+        self.container = Container.instance()
+        self.container.config.from_dict(settings.dict())
+
+        self.apply_cors()
         self.app.include_router(v1_routes, prefix='/api')
         self.app.include_router(v2_routes, prefix='/api')
 
@@ -37,6 +41,7 @@ class AppInitializer:
 
 app_initializer = AppInitializer()
 app = app_initializer.app
+
 
 @app.get("/")
 async def root():

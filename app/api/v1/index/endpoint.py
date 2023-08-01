@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.v1.index.dto import IndexPost
 from app.core.container import Container
-from app.core.database import get_session, Database
+from app.core.database import get_session
 
 # router = APIRouter(prefix='/index', route_class=LoggingAPIRoute)
 router = APIRouter(prefix='/index', tags=['index'])
@@ -25,19 +25,11 @@ class X(ModelMetaclass):
 @inject
 async def index(
         token: str = Depends(Provide[Container.config.auth_token]),
-        #db: Database = Depends(Provide[Container.database]),
-        session: AsyncSession = Depends(get_session)
+        session: AsyncSession = Depends(get_session),
 ) -> str:
     from sqlalchemy.sql import text
-    # async with db.async_session() as session:
-    #     cursor : CursorResult = await session.execute(
-    #         text('select * from asset_hub_assets')
-    #     )
-    #     for c in cursor:
-    #         print(c)
-
     cursor : CursorResult = await session.execute(
-        text('select * from asset_hub_assets')
+        text('select * from axum_demo_user')
     )
     for c in cursor:
         print(c)

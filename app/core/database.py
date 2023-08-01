@@ -1,3 +1,5 @@
+from typing import AsyncIterator
+
 from dependency_injector.wiring import Provide
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine, AsyncSession
 from sqlalchemy.ext.declarative import declarative_base
@@ -12,7 +14,7 @@ class Database:
             future=True
         )
         self.base = declarative_base()
-        self.async_session = sessionmaker(
+        self.async_sessionmaker = sessionmaker(
             bind=self.engine,
             class_=AsyncSession,
             autocommit=False,
@@ -21,3 +23,7 @@ class Database:
         )
 
 
+async def get_session() -> AsyncSession:
+    from app.core.container import Container
+    async with Container.instance().database().async_sessionmaker() as session:
+        yield session
