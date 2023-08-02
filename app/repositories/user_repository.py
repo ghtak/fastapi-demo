@@ -6,10 +6,10 @@ from app.entities.user import User
 
 
 class UserRepository:
-    def __init__(self, async_sessionmaker : Callable[..., AsyncSession]):
+    def __init__(self, async_sessionmaker: Callable[..., AsyncSession]):
         self.async_sessionmaker = async_sessionmaker
 
-    async def create(self, user: User):
+    async def create(self, user: User) -> User:
         async with self.async_sessionmaker() as session:
             session.add(user)
             await session.commit()
