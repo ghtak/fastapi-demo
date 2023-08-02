@@ -1,19 +1,15 @@
+import asyncio
 import logging
-from functools import partial
 
 from fastapi import FastAPI, Request
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
 
-from app.api.v1.routes import routes as v1_routes
-from app.api.v2.routes import routes as v2_routes
 from app.core.container import Container
 from app.core.settings import settings
+from app.entities.base import init_models
 from app.internal.logging_middleware import logging_middleware_impl
-from fastapi.middleware.cors import CORSMiddleware
-
-get_session_impl = None
-
+from app.routes.router import router
 
 class AppInitializer:
     def __init__(self):
@@ -25,8 +21,10 @@ class AppInitializer:
         self.container.config.from_dict(settings.dict())
 
         self.apply_cors()
-        self.app.include_router(v1_routes, prefix='/api')
-        self.app.include_router(v2_routes, prefix='/api')
+
+        self.app.include_router(router)
+        #self.app.include_router(v1_routes, prefix='/api')
+        #self.app.include_router(v2_routes, prefix='/api')
 
     def apply_cors(self):
         if self.container.config.cors_origin():
@@ -41,6 +39,9 @@ class AppInitializer:
 
 app_initializer = AppInitializer()
 app = app_initializer.app
+
+
+asyncio.create_task(init_models())
 
 
 @app.get("/")

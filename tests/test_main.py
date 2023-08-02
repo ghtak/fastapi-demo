@@ -6,6 +6,7 @@ from app.main import app
 
 warnings.filterwarnings(action='ignore', category=TrioDeprecationWarning)
 
+
 @pytest.mark.anyio
 async def test_root():
     async with AsyncClient(app=app, base_url="http://test") as ac:
