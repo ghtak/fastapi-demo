@@ -12,11 +12,11 @@ class UserDto(BaseModel):
 
 class UserUpdateDto(BaseModel):
     id: int
-    name: str = Field('', examples='name')
+    name: str = Field('')
 
 
 class UserCreateDto(BaseModel):
-    name: str = Field(..., examples='name')
+    name: str = Field(...)
 
 
 class PagingUserDtos(PagingBase):

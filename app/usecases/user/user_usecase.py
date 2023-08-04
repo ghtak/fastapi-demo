@@ -12,15 +12,12 @@ class UserUsecase:
     async def create(self, user_create_dto: UserCreateDto) -> UserDto:
         user: User = await self.user_repository.create(
             User(name=user_create_dto.name))
-        return user
-        # return UserDto(id=user.id, name=user.name)
+        return UserDto(**user.__dict__)
 
-    async def update(self, user_update_dto: UserUpdateDto) -> UserDto:
+    async def update(self, uid: int, user_update_dto: UserUpdateDto) -> UserDto:
         user: User = await self.user_repository.update(
-            User(id=user_update_dto.id,
-                 name=user_update_dto.name))
-        return user
-        # return UserDto(id=user.id, name=user.name)
+            User(id=uid, name=user_update_dto.name))
+        return UserDto(**user.__dict__)
 
     async def find_all(self) -> List[UserDto]:
         items = await self.user_repository.find_all()

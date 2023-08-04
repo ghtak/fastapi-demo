@@ -34,19 +34,19 @@ async def get_user_by_id(
     return user
 
 
-@router.post('/', response_model=UserDto)
+@router.post('/')
 @inject
 async def create_user(
         user_create_dto: UserCreateDto,
         user_usecase: UserUsecase = Depends(Provide[Container.user_usecase])
-):
-    user_dto: UserDto = await user_usecase.create(user_create_dto)
-    return user_dto
+) -> UserDto:
+    return await user_usecase.create(user_create_dto)
 
 
-@router.patch('/', response_model=UserDto)
+@router.patch('/{user_id:int}', response_model=Optional[UserDto])
 @inject
 async def update_user(
+        user_id: int,
         user_update_dto: UserUpdateDto,
         user_usecase: UserUsecase = Depends(Provide[Container.user_usecase])
 ):
