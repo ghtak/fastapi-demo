@@ -11,7 +11,6 @@ class UserDto(BaseModel):
 
 
 class UserUpdateDto(BaseModel):
-    id: int
     name: str = Field('')
 
 
