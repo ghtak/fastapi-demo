@@ -1,5 +1,6 @@
 from typing import Callable
 
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.entities.user import User
@@ -15,3 +16,20 @@ class UserRepository:
             await session.commit()
             await session.refresh(user)
             return user
+
+    async def update(self, user: User):
+        async with self.async_sessionmaker() as session:
+            await session.merge(user)
+            await session.commit()
+            return user
+
+    async def find_all(self):
+        async with self.async_sessionmaker() as session:
+            result = await session.execute(select(User))
+            return result.scalars().all()
+
+    async def find_by_id(self, uid: int):
+        async with self.async_sessionmaker() as session:
+            result = await session.execute(
+                select(User).where(User.id == uid))
+            return result.scalars().first()

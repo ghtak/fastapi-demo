@@ -49,6 +49,6 @@ async def root():
     return RedirectResponse(url='/index', status_code=302)
 
 
-@app.middleware('http')
-async def logging_middleware(request: Request, call_next):
-    return await logging_middleware_impl(request, call_next)
+# @app.middleware('http')
+# async def logging_middleware(request: Request, call_next):
+#     return await logging_middleware_impl(request, call_next)

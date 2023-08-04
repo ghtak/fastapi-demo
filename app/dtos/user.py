@@ -12,11 +12,12 @@ class UserDto(BaseModel):
 
 class UserUpdateDto(BaseModel):
     id: int
-    name: str = Field('', exclude='name')
+    name: str = Field('', examples='name')
 
 
 class UserCreateDto(BaseModel):
-    name: str = Field(..., exclude='name')
+    name: str = Field(..., examples='name')
+
 
 class PagingUserDtos(PagingBase):
     items: Optional[List[UserDto]]
