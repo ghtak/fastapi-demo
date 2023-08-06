@@ -21,7 +21,10 @@ class UserUsecase:
 
     async def find_all(self) -> List[UserDto]:
         items = await self.user_repository.find_all()
-        return items
+        return [UserDto(**user.__dict__) for user in items]
 
     async def find_by_id(self, uid: int) -> Optional[UserDto]:
-        return await self.user_repository.find_by_id(uid)
+        user: Optional[User] = await self.user_repository.find_by_id(uid)
+        if user is None:
+            return None
+        return UserDto(**user.__dict__)

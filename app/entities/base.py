@@ -1,10 +1,17 @@
-from sqlalchemy.ext.declarative import declarative_base
+import asyncio
 
-Base = declarative_base()
+from sqlalchemy.ext.asyncio import AsyncAttrs
+from sqlalchemy.orm import DeclarativeBase
 
 
-async def init_models():
-    from app.core.container import Container
-    async with Container.instance().database().engine.begin() as conn:
+# class Base(AsyncAttrs, DeclarativeBase):
+class Base(DeclarativeBase):
+    pass
+
+
+async def init_models(engine):
+    async with engine.begin() as conn:
         # await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
+
+
